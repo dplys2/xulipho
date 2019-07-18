@@ -10,7 +10,7 @@ from skimage import measure
 from skimage.transform import rotate
 from scipy.signal import savgol_filter
 
-def xuli(base, measurement, toado, goc, ghxd, ghxt, dr , ws = 1, ptd = 1):
+def xuliabs(base, measurement, toado, goc, ghxd, ghxt, dr , ws = 1, ptd = 1):
     bimg = mpimg.imread(base)
     bxoay = rotate(bimg, goc)
     base_xoay = np.dot(bxoay[...,:3], [299, 587, 114]) #.299 + .587 + .114 
@@ -41,3 +41,24 @@ def xuli(base, measurement, toado, goc, ghxd, ghxt, dr , ws = 1, ptd = 1):
     kenhm = tm
     kenh = -np.log10(xm)
     return kenhb, kenhm, kenh
+
+def xulitt(measurement, toado, goc, ghxd, ghxt, dr , ws = 1, ptd = 1):
+    mimg = mpimg.imread(measurement)
+    mxoay = rotate(mimg, goc)
+    measure_xoay = np.dot(mxoay[...,:3], [299, 587, 114])
+
+    dd = ghxt - ghxd + 1
+    n = np.zeros((dr*2,dd))
+    for i in range(0, dr*2):
+        n[i] = measure.profile_line(measure_xoay, (toado - dr + i, ghxd), (toado - dr + i, ghxt))
+    
+    if ptd == 1:
+        tm = np.mean(n, axis = 0)
+    else:
+        tm = np.amax(n, axis = 0)
+
+    tm = savgol_filter(tm, ws, 2)
+    
+    #np.seterr(divide='ignore', invalid='ignore')
+    kenh = tm
+    return kenh
