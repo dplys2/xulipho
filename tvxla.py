@@ -64,16 +64,14 @@ def xulitt(measurement, toado, goc, ghxd, ghxt, dr , ws = 1, ptd = 1):
     return kenh
 
 def wavelength(dk, buocsong1, c1, c2, deltabs):
-    x = np.ones((dk))
-    c1 = 387
-    c2 = 1070
-    x[c1-1]= buocsong1
+    xt = np.ones((dk))
+    xt[c1-1]= buocsong1
     delta1 = deltabs/(c2-c1)
 
     for i in range(c1-2,-1,-1):
-        x[i] = x[i+1] - delta1
+        xt[i] = xt[i+1] - delta1
     
     for i in range(c1, dk, 1):
-        x[i] = x[i-1] + delta1
+        xt[i] = xt[i-1] + delta1
     
-    return x
+    return xt
